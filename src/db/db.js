@@ -1,7 +1,6 @@
 /**
  * PersonaBalance Database Module
  * Handles SQLite (wasm) integration and local data storage.
- * * Dependencies: sql.js (loaded via CDN for now)
  */
 
 let db = null;
@@ -73,7 +72,7 @@ export function insertEvent(ev) {
         stmt.run([ev.ts, ev.clicks, ev.keys, ev.window_switches || 0]);
         stmt.free();
         
-        // Debug log (can be removed in prod)
+        // Debug 
         // console.log(`[DB] Event saved: ${ev.ts}`);
     } catch (e) {
         console.error("[DB] Insert Event Error:", e);
@@ -111,7 +110,7 @@ export function insertSummary(sum) {
     }
 }
 
-// -- Queries (To be implemented in Week 3) --
+// -- Queries 
 
 export function getEvents(startTs, endTs) {
     // TODO: Implement SELECT range query
@@ -160,9 +159,9 @@ export async function selfTest() {
     const resSum = db.exec("SELECT * FROM summary");
 
     if (res.length > 0 && resSum.length > 0) {
-        console.log("✅ DB Test Passed: Rows inserted successfully.");
+        console.log("DB Test Passed: Rows inserted successfully.");
     } else {
-        console.error("❌ DB Test Failed: No data found.");
+        console.error("DB Test Failed: No data found.");
     }
     console.log("----------------------------");
 }
