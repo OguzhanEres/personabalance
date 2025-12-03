@@ -23,13 +23,9 @@
                 <div class="icon-img">🌐</div>
                 <div class="icon-text">Google Chrome</div>
             </div>
-            <div class="icon">
-                <div class="icon-img">📁</div>
-                <div class="icon-text">Belgelerim</div>
-            </div>
         </div>
 
-        <div class="window" id="testWindow">
+        <div class="window" id="testWindow" data-track="true">
             <div class="window-header">
                 <span class="window-title">Sistem Durumu</span>
                 <div class="window-controls">
@@ -43,16 +39,14 @@
                 <p>Şu anki Mod: <b>SAKİN</b></p>
                 <p>Fare Hareketleri: Normal</p>
                 <br>
-                <button>Analiz Başlat</button>
+                <button id="analizBtn">Analiz Başlat</button>
             </div>
         </div>
 
     </div>
 
     <div class="taskbar">
-        <div class="start-btn">
-            🪟 Başlat
-        </div>
+        <div class="start-btn">🪟 Başlat</div>
         <div class="open-apps">
             <div class="app-tab active">Sistem Durumu</div>
         </div>
@@ -62,6 +56,15 @@
             <span id="clock">13:30</span>
         </div>
     </div>
+
+    <div id="debug-console" class="debug-window">
+        <div class="debug-header">🛠️ Geliştirici Konsolu</div>
+        <div class="debug-content" id="log-area">
+            > Sistem başlatıldı...<br>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 
 </body>
 </html>
