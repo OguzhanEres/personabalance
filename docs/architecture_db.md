@@ -1,37 +1,25 @@
-# PersonaBalance - System Architecture (Week 1)
+# Database Notes
 
-## Overview
-Client-side analytics running in the browser.
-**Tech Stack:** HTML/JS (UI) + sql.js (In-memory DB).
+## Decisions
 
-## Module Status
-* **Event Tracker:** In progress (Furkan). Currently sending mock data.
-* **Database:** Week 1 focus. Defining schema and API structure.
-* **UI:** Layouts are ready (Mustafa/Muhammed).
+**Library: sql.js**
+We decided to use `sql.js` for the prototype.
+* **Reason:** It allows us to set up an in-memory DB instantly without configuring Worker threads or Webpack for now.
+* **Plan:** We will implement persistence (saving to IndexedDB) in Sprint 2.
 
 ---
 
-## Data Flow (Draft)
-1. **Input:** Tracker captures clicks/keys every 30 seconds.
-2. **Process:** `insertEvent()` receives raw JSON.
-3. **Storage:** Saved to in-memory SQLite (events table).
-4. **Output:** UI queries DB for stats (Week 2).
+## Data Contracts (JSON Format)
 
----
+These are the object structures we agreed on for Week 2 integration.
 
-## Database Schema
+### 1. Raw Event (Input from Tracker)
+Furkan's module sends this every 30 seconds:
 
-Using `sql.js` for the prototype. We will add IndexedDB persistence later.
-
-### 1. Table: `events`
-Raw interaction logs.
-
-```sql
-CREATE TABLE events (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  ts INTEGER NOT NULL,          -- Unix timestamp
-  clicks INTEGER DEFAULT 0,
-  keys INTEGER DEFAULT 0,
-  window_switches TEXT,         -- TODO: Add logic in Week 2
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+```json
+{
+  "ts": 1701388800000,   // Unix timestamp (ms)
+  "clicks": 5,           // Int
+  "keys": 23,            // Int
+  "window_switches": 0   // Int (Optional)
+}

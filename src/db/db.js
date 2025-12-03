@@ -1,69 +1,168 @@
 /**
  * PersonaBalance Database Module
- * Status: Week 1 Skeleton
- * Note: Actual sql.js integration is scheduled for Week 2.
+ * Handles SQLite (wasm) integration and local data storage.
+ * * Dependencies: sql.js (loaded via CDN for now)
  */
 
 let db = null;
 
-// Initialize the database (Placeholder)
+// Initialize the database and create tables
 export async function initDb() {
-    // TODO: Load sql.js wasm binary
-    // TODO: Create tables (events, summary) if they don't exist
-    console.log("[DB] initDb called. Waiting for sql.js implementation.");
+    if (db) return db;
+
+    try {
+        console.log("[DB] Loading sql.js...");
+        
+        // Load sql.js from CDN
+        const initSqlJs = await import("https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js");
+        const SQL = await initSqlJs.default({
+            locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+        });
+
+        db = new SQL.Database();
+
+        // Table: Raw events (30-sec intervals)
+        db.run(`
+            CREATE TABLE IF NOT EXISTS events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts INTEGER,
+                clicks INTEGER,
+                keys INTEGER,
+                window_switches INTEGER
+            )
+        `);
+
+        // Table: Aggregated summaries (processed by Logic module)
+        db.run(`
+            CREATE TABLE IF NOT EXISTS summary (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts INTEGER,
+                clicks INTEGER,
+                keys INTEGER,
+                score INTEGER,
+                mood TEXT
+            )
+        `);
+
+        console.log("[DB] Initialized and tables created.");
+        return db;
+
+    } catch (error) {
+        console.error("[DB] Init failed:", error);
+        throw error;
+    }
 }
 
+// -- Core Functions --
+
 /**
- * Insert raw event data from the tracker.
- * Data format: { ts: number, clicks: number, keys: number }
+ * Inserts raw tracker data. 
+ * Called by: Tracker Module
  */
-export function insertEvent(event) {
-    if (!event || typeof event.ts !== 'number') {
-        console.error("[DB] Invalid event data");
+export function insertEvent(ev) {
+    if (!db) return console.error("[DB] Not initialized!");
+
+    // Simple validation
+    if (!ev || typeof ev.ts !== 'number') {
+        console.warn("[DB] Invalid event data:", ev);
         return;
     }
 
-    // TODO: Validation & SQL Insert
-    // console.log("INSERT INTO events...", event);
-    console.log("[DB] Mock insertEvent:", event);
-    
-    return { success: true, id: Math.floor(Math.random() * 1000) }; 
+    try {
+        const stmt = db.prepare("INSERT INTO events (ts, clicks, keys, window_switches) VALUES (?, ?, ?, ?)");
+        stmt.run([ev.ts, ev.clicks, ev.keys, ev.window_switches || 0]);
+        stmt.free();
+        
+        // Debug log (can be removed in prod)
+        // console.log(`[DB] Event saved: ${ev.ts}`);
+    } catch (e) {
+        console.error("[DB] Insert Event Error:", e);
+    }
 }
 
 /**
- * Insert aggregated summary data.
- * Data format: { ts, clicks, keys, window_type }
- * Note: 'mood' and 'score' columns will be populated later (AI module).
+ * Inserts processed summary.
+ * Called by: Logic/Mode Calculator
  */
-export function insertSummary(summary) {
-    // TODO: Check for duplicates based on timestamp + window_type
-    console.log("[DB] Mock insertSummary:", summary);
+export function insertSummary(sum) {
+    if (!db) return console.error("[DB] Not initialized!");
 
-    return { success: true };
+    // Validate enum and range
+    const validMoods = ["CALM", "BALANCED", "AGGRESSIVE"];
+    if (sum.mood && !validMoods.includes(sum.mood)) {
+        console.warn(`[DB] Invalid mood: ${sum.mood}`);
+        return;
+    }
+
+    try {
+        const stmt = db.prepare("INSERT INTO summary (ts, clicks, keys, score, mood) VALUES (?, ?, ?, ?, ?)");
+        stmt.run([
+            sum.ts, 
+            sum.clicks, 
+            sum.keys, 
+            sum.score || 0, 
+            sum.mood || "UNKNOWN"
+        ]);
+        stmt.free();
+        
+        console.log(`[DB] Summary saved: ${sum.mood} (Score: ${sum.score})`);
+    } catch (e) {
+        console.error("[DB] Insert Summary Error:", e);
+    }
 }
 
-// -- Queries (Planned for Week 2) --
+// -- Queries (To be implemented in Week 3) --
 
 export function getEvents(startTs, endTs) {
     // TODO: Implement SELECT range query
-    console.log("[DB] getEvents not implemented yet.");
     return [];
 }
 
-export function getSummary(startTs, endTs, windowType = 'event') {
-    // TODO: Implement summary query
+export function getSummary(startTs, endTs) {
+    // TODO: Implement summary query for charts
     return [];
 }
 
-// -- Dev / Test Utils --
+// -- Dev Tools --
 
 export function clearDatabase() {
-    console.warn("[DB] clearDatabase: This will wipe in-memory data.");
+    if(db) {
+        db.run("DELETE FROM events; DELETE FROM summary;");
+        console.log("[DB] All data cleared.");
+    }
 }
 
-export function selfTest() {
-    console.log("--- DB Skeleton Check ---");
-    if (typeof initDb === 'function') console.log("OK: initDb");
-    if (typeof insertEvent === 'function') console.log("OK: insertEvent");
-    console.log("Structure is ready for logic implementation.");
+// Quick test to verify tables and inserts work
+export async function selfTest() {
+    console.log("--- Running DB Self Test ---");
+    
+    await initDb();
+
+    // 1. Mock Event
+    insertEvent({ 
+        ts: Date.now(), 
+        clicks: 10, 
+        keys: 5, 
+        window_switches: 1 
+    });
+
+    // 2. Mock Summary
+    insertSummary({
+        ts: Date.now(),
+        clicks: 50,
+        keys: 120,
+        score: 85,
+        mood: "AGGRESSIVE"
+    });
+
+    // 3. Verify
+    const res = db.exec("SELECT * FROM events");
+    const resSum = db.exec("SELECT * FROM summary");
+
+    if (res.length > 0 && resSum.length > 0) {
+        console.log("✅ DB Test Passed: Rows inserted successfully.");
+    } else {
+        console.error("❌ DB Test Failed: No data found.");
+    }
+    console.log("----------------------------");
 }
