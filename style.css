@@ -1,0 +1,174 @@
+/* Genel Sıfırlama */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none; /* Masaüstü hissi için seçmeyi kapattık */
+}
+
+body {
+    height: 100vh;
+    overflow: hidden; /* Scroll çıkmasın diye */
+}
+
+/* --- MASAÜSTÜ ARKA PLANI --- */
+.desktop {
+    width: 100%;
+    height: calc(100vh - 45px); /* Taskbar payını düştük */
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff); /* Windows-vari mavi */
+    position: relative;
+    padding: 10px;
+}
+
+/* --- İKONLAR --- */
+.icon-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100px;
+}
+
+.icon {
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.icon-img {
+    font-size: 40px;
+    margin-bottom: 5px;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+}
+
+.icon-text {
+    color: white;
+    font-size: 13px;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* --- PENCERE (WINDOW COMPONENT) --- */
+.window {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    width: 400px;
+    height: 300px;
+    background-color: #f0f0f0;
+    border: 1px solid #005a9e;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.window-header {
+    background: linear-gradient(to right, #005a9e, #0078d7);
+    color: white;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px 6px 0 0;
+    cursor: grab; /* Sürükleme hissi için */
+}
+
+.window-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control-btn {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.control-btn.close:hover {
+    background-color: red;
+    border-radius: 3px;
+}
+
+.window-content {
+    padding: 20px;
+    flex-grow: 1;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin: 5px;
+}
+
+/* --- GÖREV ÇUBUĞU (TASKBAR) --- */
+.taskbar {
+    height: 45px;
+    width: 100%;
+    background-color: #1c1c1c;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.start-btn {
+    background-color: #0078d7;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 3px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: 0.2s;
+}
+
+.start-btn:hover {
+    background-color: #005a9e;
+}
+
+.open-apps {
+    flex-grow: 1;
+    display: flex;
+    gap: 5px;
+}
+
+.app-tab {
+    background-color: #3a3a3a;
+    color: #ddd;
+    padding: 5px 15px;
+    border-radius: 2px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-size: 13px;
+}
+
+.app-tab.active {
+    background-color: #4a4a4a;
+    border-bottom: 3px solid #00d2ff;
+}
+
+.system-tray {
+    color: white;
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    align-items: center;
+    padding-left: 10px;
+    border-left: 1px solid #555;
+}
