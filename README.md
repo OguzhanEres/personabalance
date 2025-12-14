@@ -64,3 +64,17 @@ documented.
 This project is developed as part of a team-based course assignment.
 Each team member works on individual branches, and contributions are
 merged via pull requests according to Scrum methodology.
+## Development Progress
+
+### Week 3
+- Implemented user interaction tracking (mouse clicks, key presses, window focus)
+- Added analysis cycle to calculate interaction intensity score
+- Defined system modes (Calm, Balanced, Intense) based on interaction metrics
+- Integrated developer console for real-time debug logging
+
+### Week 4
+- Implemented interaction history panel in the UI
+- Integrated SQLite WASM for client-side data storage (memory-backed)
+- Added data persistence logic within analysis cycles
+- Prepared OPFS-based persistent storage architecture (disabled in development due to browser security constraints)
+
