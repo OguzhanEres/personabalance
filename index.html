@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>PersonaBalance</title>
+  <link rel="stylesheet" href="/src/styles.css">
+<script type="module" src="/src/script.js"></script>
+</head>
+<body>
+
+<div id="desktop">
+
+  <!-- Desktop Icon -->
+  <div class="icon">
+    <span>🖥️</span>
+    <p>Sistem Durumu</p>
+  </div>
+
+  <!-- System Window -->
+  <div class="window" id="systemWindow">
+    <div class="title-bar">
+      Sistem Durumu
+      <button id="closeBtn">✖</button>
+    </div>
+
+    <div class="window-content">
+      <h3>PersonaBalance</h3>
+
+      <p>Şu anki Mod: <b id="modeText">Balanced</b></p>
+
+      <p>
+        Click: <span id="clickCount">0</span> |
+        Key: <span id="keyCount">0</span> |
+        Focus: <span id="focusCount">0</span>
+      </p>
+
+      <button id="startBtn">Analiz Başlat</button>
+      <button id="resetBtn">Sıfırla</button>
+
+      <h4>Geliştirici Konsolu</h4>
+      <div id="debugBox" class="debug-box"></div>
+
+      <h4>Geçmiş Kayıtlar (History)</h4>
+      <div id="historyPanel" class="history-panel">
+        <p class="empty-history">Henüz kayıt yok.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Taskbar -->
+<div id="taskbar">
+  <span>Başlat</span>
+  <span class="clock">13:30</span>
+</div>
+
+</body>
+</html>

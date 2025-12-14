@@ -1,0 +1,30 @@
+{
+  "name": "personabalance",
+  "version": "1.0.0",
+  "description": "PersonaBalance is a browser-based digital balance monitoring system.\r It analyzes user interaction behaviors in a desktop-like interface\r to determine the user's engagement state.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OguzhanEres/personabalance.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/OguzhanEres/personabalance/issues"
+  },
+  "homepage": "https://github.com/OguzhanEres/personabalance#readme",
+  "dependencies": {
+    "@sqlite.org/sqlite-wasm": "^3.51.1-build2"
+  },
+  "devDependencies": {
+    "vite": "^7.2.7"
+  }
+}
