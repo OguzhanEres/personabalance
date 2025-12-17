@@ -10,39 +10,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function bringToFront(windowElement) {
-        // Diğer pencereleri arkaya at
         document.querySelectorAll('.window').forEach(w => w.style.zIndex = '10');
-        // Seçileni öne çek
         windowElement.style.zIndex = '20';
     }
 
-    // Başlangıç Logu
-    logEvent("Sistem Başlatıldı. Tracking Modülü Aktif...");
+    // --- WEEK 4: BİLDİRİM FONKSİYONU ---
+    function showNotification(title, message, type = 'info') {
+        const container = document.getElementById('notification-container');
+        if (!container) return;
 
-    // --- GLOBAL TRACKING (Week 2) ---
-    
-    // Tıklamaları dinle
+        // HTML elemanını oluştur
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        `;
+
+        // Konteynere ekle
+        container.appendChild(toast);
+        logEvent(`Bildirim Gönderildi: ${title}`);
+
+        // Ses efekti simülasyonu
+        // (Buraya ilerde ses eklenebilir)
+
+        // 5 Saniye sonra sil
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300); // Animasyon bitince sil
+        }, 5000);
+    }
+
+    // Başlangıç Logu
+    logEvent("Sistem Başlatıldı. Bildirim Servisi Hazır.");
+
+    // --- GLOBAL TRACKING ---
     document.addEventListener('click', (e) => {
         let target = e.target;
-        
-        // Pencerelere tıklayınca öne getirme mantığı
         const parentWindow = target.closest('.window');
-        if (parentWindow) {
-            bringToFront(parentWindow);
-        }
+        if (parentWindow) bringToFront(parentWindow);
 
-        // Loglama
         let info = target.tagName;
         if(target.className) info += `.${target.className.split(' ')[0]}`;
         logEvent(`Tıklandı: <span style="color:yellow">${info}</span>`);
     });
 
-    // Klavyeyi dinle
     document.addEventListener('keydown', (e) => {
         logEvent(`Klavye Basıldı: <span style="color:cyan">[${e.key}]</span>`);
     });
 
-    // --- PENCERE KONTROLLERİ (Kapat/Küçült) ---
+    // --- PENCERE KONTROLLERİ ---
     const closeBtns = document.querySelectorAll('.control-btn.close');
     closeBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -54,16 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- RAPOR PENCERESİ MANTIĞI (Week 3) ---
+    // --- RAPOR PENCERESİ ---
     const reportIcon = document.getElementById('reportIcon');
     const reportWindow = document.getElementById('reportWindow');
 
     if (reportIcon && reportWindow) {
-        // İkona çift tıklayınca aç
         reportIcon.addEventListener('dblclick', () => {
             reportWindow.style.display = 'flex';
             bringToFront(reportWindow);
             logEvent('Sistem: AI Rapor Penceresi Açıldı.');
+        });
+    }
+
+    // --- ANALİZ BUTONU VE BİLDİRİM TESTİ (WEEK 4) ---
+    const analizBtn = document.getElementById('analizBtn');
+    if (analizBtn) {
+        analizBtn.addEventListener('click', () => {
+            logEvent("Analiz başlatılıyor...");
+            analizBtn.innerText = "Analiz Yapılıyor...";
+            
+            // 2 Saniye sonra sonucu simüle et
+            setTimeout(() => {
+                analizBtn.innerText = "Analiz Başlat";
+                // Rastgele bir bildirim fırlat
+                showNotification(
+                    "Denge Uyarısı!", 
+                    "Kullanıcı aktivitesinde hafif artış tespit edildi. Biraz yavaşlayın.", 
+                    "warning"
+                );
+            }, 2000);
         });
     }
 });
