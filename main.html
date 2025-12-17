@@ -23,9 +23,13 @@
                 <div class="icon-img">🌐</div>
                 <div class="icon-text">Google Chrome</div>
             </div>
+            <div class="icon" id="reportIcon">
+                <div class="icon-img">📊</div>
+                <div class="icon-text">AI Raporları</div>
+            </div>
         </div>
 
-        <div class="window" id="testWindow" data-track="true">
+        <div class="window" id="testWindow" data-track="true" style="top: 10%; left: 20%;">
             <div class="window-header">
                 <span class="window-title">Sistem Durumu</span>
                 <div class="window-controls">
@@ -40,6 +44,36 @@
                 <p>Fare Hareketleri: Normal</p>
                 <br>
                 <button id="analizBtn">Analiz Başlat</button>
+            </div>
+        </div>
+
+        <div class="window" id="reportWindow" data-track="true" style="display: none; width: 650px; height: 450px; top: 15%; left: 25%;">
+            <div class="window-header">
+                <span class="window-title">🛡️ PersonaBalance - AI Analiz Raporları</span>
+                <div class="window-controls">
+                    <span class="control-btn minimize">_</span>
+                    <span class="control-btn maximize">□</span>
+                    <span class="control-btn close">X</span>
+                </div>
+            </div>
+            <div class="window-content report-layout">
+                <div class="report-sidebar">
+                    <div class="sidebar-title">Geçmiş Analizler</div>
+                    <ul class="report-list">
+                        <li class="report-item active">📅 Bugün - 14:30 (Sakin)</li>
+                        <li class="report-item">📅 Dün - 18:45 (Agresif)</li>
+                        <li class="report-item">📅 15.12.2025 - 09:00 (Dengeli)</li>
+                    </ul>
+                </div>
+                <div class="report-detail">
+                    <h2 id="report-title">Günlük Denge Analizi</h2>
+                    <div class="ai-response-area">
+                        <p><strong>Durum Özeti:</strong> Kullanıcı son 30 dakikada düşük frekanslı fare hareketleri sergiledi. Klavye kullanımı stabil.</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+                        <p><strong>Yapay Zeka Yorumu:</strong> "Bugün gayet sakinsin. Bu modu korursan günü güzelce bitirirsin. "</p>
+                        <div class="status-badge status-calm">Mevcut Mod: SAKİN</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -65,6 +99,5 @@
     </div>
 
     <script src="app.js"></script>
-
 </body>
 </html>
