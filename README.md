@@ -78,3 +78,12 @@ merged via pull requests according to Scrum methodology.
 - Added data persistence logic within analysis cycles
 - Prepared OPFS-based persistent storage architecture (disabled in development due to browser security constraints)
 
+### Week 5 – UI Finalization & Interaction Persistence
+
+In Week 5, I focused on finalizing the user interface and improving the overall usability of the PersonaBalance system. A desktop-style environment was implemented to simulate a Windows-like user experience, including a draggable application window, taskbar, and desktop icon interaction.
+
+Key enhancements include enabling the application window to be closed and reopened via a desktop icon using a double-click mechanism, as well as persisting the window position using localStorage to maintain continuity across sessions. These features significantly improved user experience and realism of the interface.
+
+Additionally, the interaction tracking, mode calculation, and history logging components were verified and stabilized to ensure the system is fully functional and ready for integration with higher-level analysis modules. The application is now in a finalized, demo-ready state with a polished UI and persistent behavior.
+
+
