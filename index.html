@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <title>PersonaBalance</title>
-  <link rel="stylesheet" href="/src/styles.css">
-<script type="module" src="/src/script.js"></script>
+
+  <!-- Style -->
+  <link rel="stylesheet" href="/src/style.css">
+
+  <!-- Script -->
+  <script type="module" src="/src/script.js" defer></script>
 </head>
 <body>
 
+<!-- ================= DESKTOP ================= -->
 <div id="desktop">
 
   <!-- Desktop Icon -->
-  <div class="icon">
+  <div class="icon" id="desktopIcon">
     <span>🖥️</span>
     <p>Sistem Durumu</p>
   </div>
 
-  <!-- System Window -->
+  <!-- ================= SYSTEM WINDOW ================= -->
   <div class="window" id="systemWindow">
-    <div class="title-bar">
-      Sistem Durumu
+    <div class="title-bar" id="titleBar">
+      <span>Sistem Durumu</span>
       <button id="closeBtn">✖</button>
     </div>
 
@@ -49,9 +54,9 @@
 
 </div>
 
-<!-- Taskbar -->
+<!-- ================= TASKBAR ================= -->
 <div id="taskbar">
-  <span>Başlat</span>
+  <span class="start-btn">Başlat</span>
   <span class="clock">13:30</span>
 </div>
 

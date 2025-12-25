@@ -1,9 +1,11 @@
+console.log("Drag JS loaded");
 // PersonaBalance
 // Week 1–2: Desktop UI + window behavior
 // Week 3: Interaction tracking + mode calculation
-// Week 4: localStorage persistence + History panel
+// Week 4: SQLite WASM persistence + History panel
+// Week 5: Stabilization & finalization
 
-/* ===================== DOM ELEMENTS ===================== */
+/* ===================== IMPORTS ===================== */
 import {
   initDb,
   insertRecord,
@@ -11,12 +13,14 @@ import {
   clearRecords
 } from "./sqliteClient.js";
 
+/* ===================== DOM ELEMENTS ===================== */
 const modeText = document.getElementById("modeText");
 const clickCountEl = document.getElementById("clickCount");
 const keyCountEl = document.getElementById("keyCount");
 const focusCountEl = document.getElementById("focusCount");
 const debugBox = document.getElementById("debugBox");
 const historyPanel = document.getElementById("historyPanel");
+const desktopIcon = document.getElementById("desktopIcon");
 
 const startBtn = document.getElementById("startBtn");
 const resetBtn = document.getElementById("resetBtn");
@@ -26,7 +30,6 @@ const windowEl = document.getElementById("systemWindow");
 const titleBar = document.querySelector(".title-bar");
 
 /* ===================== STATE ===================== */
-
 let clickCount = 0;
 let keyCount = 0;
 let focusCount = 0;
@@ -34,8 +37,28 @@ let focusCount = 0;
 let analysisTimer = null;
 const WINDOW_MS = 30000;
 
-/* ===================== DEBUG LOGGER ===================== */
+desktopIcon.addEventListener("dblclick", () => {
+  windowEl.style.display = "block";
+  restoreWindowPosition();
+  logDebug("Window opened from desktop icon");
+});
+function saveWindowPosition() {
+  const pos = {
+    left: windowEl.style.left,
+    top: windowEl.style.top
+  };
+  localStorage.setItem("windowPosition", JSON.stringify(pos));
+}
+function restoreWindowPosition() {
+  const pos = JSON.parse(localStorage.getItem("windowPosition"));
+  if (pos) {
+    windowEl.style.left = pos.left;
+    windowEl.style.top = pos.top;
+  }
+}
 
+
+/* ===================== DEBUG LOGGER ===================== */
 function logDebug(message) {
   const time = new Date().toLocaleTimeString();
   const line = document.createElement("div");
@@ -44,34 +67,39 @@ function logDebug(message) {
 }
 
 /* ===================== WINDOW DRAG ===================== */
-
 let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
 titleBar.addEventListener("mousedown", (e) => {
+  e.preventDefault(); // 🔴 KRİTİK
   isDragging = true;
   offsetX = e.clientX - windowEl.offsetLeft;
   offsetY = e.clientY - windowEl.offsetTop;
 });
 
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  windowEl.style.left = `${e.clientX - offsetX}px`;
+  windowEl.style.top = `${e.clientY - offsetY}px`;
+});
+
 document.addEventListener("mouseup", () => {
+  if (isDragging) {
+    saveWindowPosition();
+  }
   isDragging = false;
 });
 
-document.addEventListener("mousemove", (e) => {
-  if (isDragging) {
-    windowEl.style.left = `${e.clientX - offsetX}px`;
-    windowEl.style.top = `${e.clientY - offsetY}px`;
-  }
-});
 
 closeBtn.addEventListener("click", () => {
+  saveWindowPosition();
   windowEl.style.display = "none";
 });
 
-/* ===================== EVENT TRACKING (WEEK 3) ===================== */
 
+/* ===================== EVENT TRACKING (WEEK 3) ===================== */
 document.addEventListener("click", () => {
   clickCount++;
   clickCountEl.textContent = clickCount;
@@ -90,7 +118,6 @@ window.addEventListener("focus", () => {
 });
 
 /* ===================== MODE LOGIC ===================== */
-
 function getIntensityScore() {
   return (clickCount * 2) + (keyCount * 1) + (focusCount * 3);
 }
@@ -101,8 +128,7 @@ function calculateMode(score) {
   return "Aggressive";
 }
 
-/* ===================== WEEK 4: DATA MODEL ===================== */
-
+/* ===================== DATA MODEL (WEEK 4) ===================== */
 function buildInteractionRecord(score, mode) {
   return {
     timestamp: new Date().toISOString(),
@@ -114,20 +140,7 @@ function buildInteractionRecord(score, mode) {
   };
 }
 
-function saveRecordToLocalStorage(record) {
-  const key = "personaBalanceRecords";
-  const existing = JSON.parse(localStorage.getItem(key)) || [];
-  existing.push(record);
-  localStorage.setItem(key, JSON.stringify(existing));
-  logDebug("Record saved to localStorage");
-}
-
-function loadRecordsFromLocalStorage() {
-  return JSON.parse(localStorage.getItem("personaBalanceRecords")) || [];
-}
-
 /* ===================== HISTORY PANEL ===================== */
-
 async function renderHistoryPanel() {
   const records = await getRecentRecords(10);
   historyPanel.innerHTML = "";
@@ -157,9 +170,7 @@ async function renderHistoryPanel() {
   });
 }
 
-
 /* ===================== ANALYSIS CYCLE ===================== */
-
 async function runAnalysisCycle() {
   const score = getIntensityScore();
   const mode = calculateMode(score);
@@ -170,14 +181,11 @@ async function runAnalysisCycle() {
     mode === "Calm" ? "green" :
     mode === "Balanced" ? "orange" : "red";
 
-  // Build record
+  // Build & save record
   const record = buildInteractionRecord(score, mode);
-  console.log("INSERT ATTEMPT", record);
-
-  // ✅ SQLite insert
   await insertRecord(record);
 
-  // ✅ Refresh history panel from SQLite
+  // Refresh history
   await renderHistoryPanel();
 
   // Debug log
@@ -196,20 +204,17 @@ async function runAnalysisCycle() {
   focusCountEl.textContent = "0";
 }
 
-
 /* ===================== CONTROLS ===================== */
-
 startBtn.addEventListener("click", () => {
   if (analysisTimer) {
     logDebug("Analysis already running.");
     return;
   }
-  logDebug("Analysis started (30s windows).");
+  logDebug("Analysis started (30s window).");
   analysisTimer = setInterval(runAnalysisCycle, WINDOW_MS);
 });
 
 resetBtn.addEventListener("click", async () => {
-  // Reset counters
   clickCount = 0;
   keyCount = 0;
   focusCount = 0;
@@ -218,41 +223,28 @@ resetBtn.addEventListener("click", async () => {
   keyCountEl.textContent = "0";
   focusCountEl.textContent = "0";
 
-  // Reset mode UI
   modeText.textContent = "Balanced";
   modeText.style.color = "black";
 
-  // Clear debug output
   debugBox.innerHTML = "";
 
-  // Stop analysis timer
   if (analysisTimer) {
     clearInterval(analysisTimer);
     analysisTimer = null;
   }
 
-  // ✅ Clear SQLite records
   await clearRecords();
-
-  // ✅ Refresh history panel
   await renderHistoryPanel();
 
   logDebug("SQLite records cleared");
 });
 
-async function requestPersistentStorage() {
-  if (navigator.storage && navigator.storage.persist) {
-    const granted = await navigator.storage.persist();
-    console.log("Persistent storage granted:", granted);
-  }
-}
-
 /* ===================== INIT ===================== */
-
 (async () => {
-  await requestPersistentStorage(); // 👈 EKLENDİ
+  await requestPersistentStorage();
   await initDb();
+
+  restoreWindowPosition();   // 👈 EKLENDİ
   await renderHistoryPanel();
 })();
-
 
