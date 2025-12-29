@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>PersonaBalance</title>
+
+  <!-- Style -->
+  <link rel="stylesheet" href="/src/style.css">
+
+  <!-- Script -->
+  <script type="module" src="/src/script.js" defer></script>
+</head>
+<body>
+
+<!-- ================= DESKTOP ================= -->
+<div id="desktop">
+
+  <!-- Desktop Icon -->
+  <div class="icon" id="desktopIcon">
+    <span>🖥️</span>
+    <p>Sistem Durumu</p>
+  </div>
+  <div class="icon" id="icon-calculator">
+  	<span>🧮</span>
+  	<p>Hesap Makinesi</p>
+  </div>
+  <div class="icon" id="icon-google">
+  	<span>🌐</span>
+  	<p>Google</p>
+  </div>
+
+  <!-- ================= SYSTEM WINDOW ================= -->
+  <div class="window" id="systemWindow">
+    <div class="title-bar" id="titleBar">
+      <span>Sistem Durumu</span>
+      <button id="closeBtn">✖</button>
+    </div>
+
+    <div class="window-content">
+      <h3>PersonaBalance</h3>
+
+      <p>Şu anki Mod: <b id="modeText">Balanced</b></p>
+
+      <p>
+        Click: <span id="clickCount">0</span> |
+        Key: <span id="keyCount">0</span> |
+        Focus: <span id="focusCount">0</span>
+      </p>
+
+      <button id="startBtn">Analiz Başlat</button>
+      <button id="resetBtn">Sıfırla</button>
+      <button id="generateReportBtn" style="margin-left: 5px;">Rapor Oluştur</button>
+
+      <h4>AI API Ayarları</h4>
+      <div style="margin-bottom: 10px;">
+        <label for="apiModeSelect" style="display: block; margin-bottom: 5px;">Rapor Modu:</label>
+        <select id="apiModeSelect" style="width: 100%; padding: 5px;">
+          <option value="simulated">Simulated (Yerel - API Anahtarı Gerektirmez)</option>
+          <option value="openai">OpenAI API (GPT-3.5-turbo)</option>
+          <option value="huggingface">HuggingFace API (Mistral)</option>
+        </select>
+        <p style="font-size: 11px; color: #666; margin-top: 5px;">
+          API kullanmak için .env dosyasına API anahtarınızı ekleyin: VITE_OPENAI_API_KEY veya VITE_HUGGINGFACE_API_KEY
+        </p>
+        <div id="apiStatus" style="font-size: 11px; margin-top: 5px; padding: 5px; background: #f0f0f0; border-radius: 3px;">
+          Durum: <span id="apiStatusText">Simulated mod aktif</span>
+        </div>
+      </div>
+
+      <h4>Geliştirici Konsolu</h4>
+      <div id="debugBox" class="debug-box"></div>
+
+      <h4>Geçmiş Kayıtlar (History)</h4>
+      <div id="historyPanel" class="history-panel">
+        <p class="empty-history">Henüz kayıt yok.</p>
+      </div>
+
+      <h4>AI Denge Raporu</h4>
+      <div id="aiReportPanel" class="ai-report-panel">
+        <p class="empty-report">Henüz rapor oluşturulmadı. Analiz başladıktan sonra raporlar burada görünecek.</p>
+      </div>
+    </div>
+<div class="window hidden" id="calculatorWindow" style="left: 500px; top: 120px;">
+  <div class="title-bar">
+    Hesap Makinesi
+    <button class="close-btn">✖</button>
+  </div>
+
+  <div class="window-content">
+    <input id="calcDisplay" readonly style="width:100%; margin-bottom:8px;" />
+
+    <div class="calc-grid">
+      <button>7</button><button>8</button><button>9</button><button>/</button>
+      <button>4</button><button>5</button><button>6</button><button>*</button>
+      <button>1</button><button>2</button><button>3</button><button>-</button>
+      <button>0</button><button>=</button><button>C</button><button>+</button>
+    </div>
+  </div>
+</div>
+
+<div class="window hidden" id="googleWindow" style="left: 300px; top: 200px; width: 500px;">
+  <div class="title-bar">
+    Google
+    <button class="close-btn">✖</button>
+  </div>
+
+  <div class="window-content">
+    <div style="text-align: center; padding: 20px;">
+      <h2 style="color: #4285f4; font-size: 72px; margin: 20px 0;">Google</h2>
+      <input type="text" id="googleSearch" placeholder="Google'da ara..." style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 24px; margin: 20px 0;" />
+      <div style="margin-top: 20px;">
+        <button style="padding: 10px 20px; margin: 0 5px; border: none; background: #f8f9fa; cursor: pointer;">Google'da Ara</button>
+        <button style="padding: 10px 20px; margin: 0 5px; border: none; background: #f8f9fa; cursor: pointer;">Kendimi Şanslı Hissediyorum</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+</div>
+
+<!-- ================= BALANCE BAR ================= -->
+<div id="balanceBar">
+  <div class="balance-bar-label">Denge</div>
+  <div class="balance-indicator" id="balanceIndicator">
+    <div class="balance-fill" id="balanceFill"></div>
+    <div class="balance-marker" id="balanceMarker"></div>
+  </div>
+  <div class="balance-mode" id="balanceModeText">Balanced</div>
+</div>
+
+<!-- ================= TASKBAR ================= -->
+<div id="taskbar">
+  <span class="start-btn">Başlat</span>
+  <span class="clock">13:30</span>
+</div>
+
+</body>
+</html>

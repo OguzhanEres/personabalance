@@ -1,0 +1,386 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: Segoe UI, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* ================= DESKTOP ================= */
+#desktop {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2d7fe3, #1a5fb4);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Desktop icon */
+.icon {
+  width: 80px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+
+.icon span {
+  font-size: 28px;
+}
+
+.icon p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+.icon.selected {
+  background: rgba(255,255,255,0.25);
+  border-radius: 6px;
+}
+
+
+/* ================= WINDOW ================= */
+.window {
+  width: 380px;
+  position: absolute;
+  top: 120px;
+  left: 120px;
+  background: white;
+  border: 2px solid #333;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.5);
+
+  /* 👇 ANİMASYON */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 👇 KAPALI HAL */
+.window.hidden {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+.window.inactive {
+  opacity: 0.85;
+}
+
+.window.active {
+  opacity: 1;
+}
+
+
+/* Title bar */
+.title-bar {
+  background: linear-gradient(to right, #0b5ed7, #3b82f6);
+  color: white;
+  padding: 6px 8px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  user-select: none;
+}
+.title-bar {
+  cursor: grab;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+
+/* Close button */
+.title-bar button {
+  width: 20px;
+  height: 20px;
+  background: #c0392b;
+  border: 1px solid #922b21;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}
+
+.title-bar button:hover {
+  background: #e74c3c;
+}
+
+/* Window content */
+.window-content {
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* ================= DEBUG CONSOLE ================= */
+.debug-box {
+  height: 110px;
+  overflow-y: auto;
+  background: #111;
+  color: #0f0;
+  padding: 8px;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+}
+
+/* ================= HISTORY PANEL ================= */
+.history-panel {
+  max-height: 140px;
+  overflow-y: auto;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 6px;
+  font-size: 12px;
+}
+
+.history-item {
+  padding: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #ddd;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item .mode {
+  font-weight: bold;
+}
+
+.empty-history {
+  color: #777;
+  font-style: italic;
+}
+
+/* ================= TASKBAR ================= */
+#taskbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 35px;
+  background: #111;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  align-items: center;
+  border-top: 2px solid #444;
+  box-sizing: border-box;
+}
+
+#taskbar .start-btn {
+  font-weight: bold;
+}
+
+#taskbar .clock {
+  font-family: Consolas, monospace;
+}
+
+/* ================= BALANCE BAR ================= */
+#balanceBar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: calc(100% - 35px);
+  bottom: 35px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  z-index: 1000;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease;
+}
+
+.balance-bar-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.balance-indicator {
+  width: 30px;
+  height: 60vh;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.balance-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, #4caf50, #8bc34a);
+  transition: height 0.5s ease, background 0.5s ease;
+  border-radius: 0 0 13px 13px;
+}
+
+.balance-marker {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.balance-mode {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 20px;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* Theme: Calm Mode */
+body.theme-calm #desktop {
+  background: linear-gradient(#4caf50, #2e7d32);
+}
+
+body.theme-calm .balance-fill {
+  background: linear-gradient(to top, #4caf50, #8bc34a);
+  height: 30%;
+}
+
+body.theme-calm .balance-mode {
+  color: #c8e6c9;
+}
+
+/* Theme: Balanced Mode */
+body.theme-balanced #desktop {
+  background: linear-gradient(#2d7fe3, #1a5fb4);
+}
+
+body.theme-balanced .balance-fill {
+  background: linear-gradient(to top, #2196f3, #64b5f6);
+  height: 50%;
+}
+
+body.theme-balanced .balance-mode {
+  color: #bbdefb;
+}
+
+/* Theme: Aggressive Mode */
+body.theme-aggressive #desktop {
+  background: linear-gradient(#f44336, #c62828);
+}
+
+body.theme-aggressive .balance-fill {
+  background: linear-gradient(to top, #f44336, #ff7043);
+  height: 80%;
+}
+
+body.theme-aggressive .balance-mode {
+  color: #ffcdd2;
+}
+
+/* ================= AI REPORT PANEL ================= */
+.ai-report-panel {
+  max-height: 200px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.ai-report-item {
+  padding: 8px;
+  margin-bottom: 8px;
+  background: white;
+  border-left: 3px solid #2196f3;
+  border-radius: 3px;
+}
+
+.ai-report-item h5 {
+  margin: 0 0 5px 0;
+  color: #1976d2;
+  font-size: 13px;
+}
+
+.ai-report-item p {
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
+}
+
+.empty-report {
+  color: #777;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ================= NOTIFICATION ================= */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff5722;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  animation: slideDown 0.3s ease;
+  max-width: 500px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.notification.warning {
+  background: #ff9800;
+}
+
+.notification.info {
+  background: #2196f3;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.calc-grid button {
+  padding: 8px;
+  font-size: 14px;
+}
+
