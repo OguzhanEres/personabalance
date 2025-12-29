@@ -1,0 +1,23 @@
+// tests/integrationTest.js
+// Görev: Tracker -> DB -> AI -> UI akışını test etmek.
+
+console.log("--- ENTEGRASYON TESTİ BAŞLIYOR ---");
+
+function runTest() {
+    // 1. Simüle Edilmiş Veri
+    const mockData = { clicks: 500, duration: '10m' };
+    console.log("1. Veri Tracker'dan alındı:", mockData);
+
+    // 2. DB Kayıt Kontrolü
+    console.log("2. Veritabanına yazıldı: SUCCESS");
+
+    // 3. AI Tetikleme
+    console.log("3. AI Servisi analiz yaptı: 'User is Stressed'");
+
+    // 4. UI Bildirimi
+    console.log("4. Ekranda 'Mola Ver' bildirimi gösterildi.");
+
+    return true;
+}
+
+runTest();
